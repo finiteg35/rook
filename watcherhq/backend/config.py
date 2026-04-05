@@ -8,6 +8,8 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str = "sqlite:///./watcherhq.db"
 
+    # IMPORTANT: Override SECRET_KEY with a strong random value in production.
+    # Generate with: python -c "import secrets; print(secrets.token_hex(32))"
     SECRET_KEY: str = "your-secret-key-here"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 10080  # 7 days
 

@@ -96,7 +96,23 @@ export default function AddMonitorForm({
     setError(null)
     if (!name.trim()) { setError('Monitor name is required'); return }
     try {
-      await onSubmit(name.trim(), fields)
+      // Normalise field values before submission
+      const config: Record<string, unknown> = {}
+      MODULE_FIELDS[moduleType].forEach((f) => {
+        const val = fields[f.name]
+        if (f.name === 'topics' || (f.name === 'keywords' && f.type === 'text')) {
+          // Split comma-separated text into array
+          config[f.name] = typeof val === 'string'
+            ? val.split(',').map((s) => s.trim()).filter(Boolean)
+            : val
+        } else if (f.type === 'number') {
+          // Convert empty string to null for optional number fields
+          config[f.name] = val === '' ? null : val
+        } else {
+          config[f.name] = val
+        }
+      })
+      await onSubmit(name.trim(), config)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to save monitor')
     }

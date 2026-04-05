@@ -28,6 +28,10 @@ class AlertResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class AlertUpdateRequest(BaseModel):
+    is_read: Optional[bool] = None
+
+
 # ---------- Helpers ----------
 
 def _get_alert_or_404(alert_id: int, user: User, db: Session) -> Alert:

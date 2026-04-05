@@ -56,9 +56,9 @@ export default function BillingPage() {
     } catch {
       // Fallback plans if API not available
       setPlans([
-        { id: 'free',     name: 'Free',     price: 0,   features: PLAN_FEATURES.free },
-        { id: 'pro',      name: 'Pro',      price: 12,  features: PLAN_FEATURES.pro,      stripe_price_id: 'price_pro' },
-        { id: 'business', name: 'Business', price: 39,  features: PLAN_FEATURES.business, stripe_price_id: 'price_business' },
+        { id: 'free',     name: 'Free',     price: 0,     features: PLAN_FEATURES.free },
+        { id: 'pro',      name: 'Pro',      price: 9.99,  features: PLAN_FEATURES.pro },
+        { id: 'business', name: 'Business', price: 24.99, features: PLAN_FEATURES.business },
       ])
     } finally {
       setIsLoading(false)
@@ -71,12 +71,12 @@ export default function BillingPage() {
     load()
   }, [router, fetchUser, load])
 
-  const handleUpgrade = async (priceId: string) => {
-    setCheckoutLoading(priceId)
+  const handleUpgrade = async (planId: string) => {
+    setCheckoutLoading(planId)
     setError(null)
     try {
-      const res = await billingApi.createCheckout(priceId)
-      window.location.href = res.data.url
+      const res = await billingApi.createCheckout(planId)
+      window.location.href = res.data.checkout_url
     } catch {
       setError('Failed to start checkout. Please try again.')
     } finally {
@@ -89,7 +89,7 @@ export default function BillingPage() {
     setError(null)
     try {
       const res = await billingApi.createPortalSession()
-      window.location.href = res.data.url
+      window.location.href = res.data.portal_url
     } catch {
       setError('Failed to open billing portal. Please try again.')
     } finally {
@@ -181,13 +181,13 @@ export default function BillingPage() {
                     </div>
                   ) : plan.price === 0 ? null : (
                     <button
-                      onClick={() => plan.stripe_price_id && handleUpgrade(plan.stripe_price_id)}
-                      disabled={checkoutLoading === plan.stripe_price_id}
+                      onClick={() => handleUpgrade(plan.id)}
+                      disabled={checkoutLoading === plan.id}
                       className="flex items-center justify-center gap-2 w-full bg-teal-500 hover:bg-teal-600
                         disabled:opacity-50 text-white font-medium rounded-lg px-4 py-2.5 transition-colors"
                     >
                       <Zap className="w-4 h-4" />
-                      {checkoutLoading === plan.stripe_price_id ? 'Redirecting…' : `Upgrade to ${plan.name}`}
+                      {checkoutLoading === plan.id ? 'Redirecting…' : `Upgrade to ${plan.name}`}
                     </button>
                   )}
                 </div>

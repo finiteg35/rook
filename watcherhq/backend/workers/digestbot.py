@@ -47,7 +47,12 @@ async def run_digestbot(monitor_id: int, db: Session) -> None:
         return
 
     config = monitor.config or {}
-    topics: List[str] = config.get("topics", [])
+    raw_topics = config.get("topics", [])
+    # Accept either a list or a comma-separated string
+    if isinstance(raw_topics, str):
+        topics: List[str] = [t.strip() for t in raw_topics.split(",") if t.strip()]
+    else:
+        topics = list(raw_topics)
     delivery: str = config.get("delivery", "email")
 
     if not topics:

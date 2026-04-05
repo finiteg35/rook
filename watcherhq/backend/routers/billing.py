@@ -29,7 +29,7 @@ PLAN_INFO: List[Dict[str, Any]] = [
     {
         "id": "pro",
         "name": "Pro",
-        "price_usd": 9,
+        "price_usd": 9.99,
         "price_id": settings.STRIPE_PRO_PRICE_ID,
         "monitors": 25,
         "features": ["25 monitors", "Hourly checks", "Email & Telegram notifications", "Priority support"],
@@ -37,7 +37,7 @@ PLAN_INFO: List[Dict[str, Any]] = [
     {
         "id": "business",
         "name": "Business",
-        "price_usd": 29,
+        "price_usd": 24.99,
         "price_id": settings.STRIPE_BUSINESS_PRICE_ID,
         "monitors": -1,
         "features": ["Unlimited monitors", "15-minute checks", "All notification channels", "Dedicated support"],
@@ -122,7 +122,7 @@ def create_checkout(
     return CheckoutResponse(checkout_url=session.url)
 
 
-@router.get("/portal", response_model=PortalResponse)
+@router.post("/portal", response_model=PortalResponse)
 def billing_portal(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),

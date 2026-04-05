@@ -31,7 +31,12 @@ async def _notify_user(user: User, title: str, message: str) -> None:
 
 
 def _build_query(config: dict) -> str:
-    keywords: List[str] = config.get("keywords", [])
+    raw_keywords = config.get("keywords", [])
+    # Accept either a list or a comma-separated string
+    if isinstance(raw_keywords, str):
+        keywords: List[str] = [k.strip() for k in raw_keywords.split(",") if k.strip()]
+    else:
+        keywords = list(raw_keywords)
     location: str = config.get("location", "")
     job_title: str = config.get("job_title", "")
     remote: bool = config.get("remote", False)

@@ -73,59 +73,59 @@ export const authApi = {
     const body = new URLSearchParams()
     body.append('username', email)
     body.append('password', password)
-    return api.post<{ access_token: string; token_type: string }>('/auth/login', body, {
+    return api.post<{ access_token: string; token_type: string }>('/api/auth/login', body, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
   },
 
   register: (email: string, password: string) =>
-    api.post<User>('/auth/register', { email, password }),
+    api.post<User>('/api/auth/register', { email, password }),
 
-  getMe: () => api.get<User>('/auth/me'),
+  getMe: () => api.get<User>('/api/auth/me'),
 
   updateMe: (data: Partial<Pick<User, 'notification_email' | 'telegram_chat_id'>>) =>
-    api.patch<User>('/auth/me', data),
+    api.patch<User>('/api/auth/me', data),
 }
 
 // ── Monitors ─────────────────────────────────────────────────────────────────
 
 export const monitorsApi = {
-  list: () => api.get<Monitor[]>('/monitors'),
+  list: () => api.get<Monitor[]>('/api/monitors'),
 
   create: (data: { name: string; module_type: string; config: Record<string, unknown> }) =>
-    api.post<Monitor>('/monitors', data),
+    api.post<Monitor>('/api/monitors', data),
 
-  get: (id: number) => api.get<Monitor>(`/monitors/${id}`),
+  get: (id: number) => api.get<Monitor>(`/api/monitors/${id}`),
 
   update: (id: number, data: Partial<Monitor>) =>
-    api.patch<Monitor>(`/monitors/${id}`, data),
+    api.patch<Monitor>(`/api/monitors/${id}`, data),
 
-  delete: (id: number) => api.delete(`/monitors/${id}`),
+  delete: (id: number) => api.delete(`/api/monitors/${id}`),
 
-  run: (id: number) => api.post<Monitor>(`/monitors/${id}/run`),
+  run: (id: number) => api.post<Monitor>(`/api/monitors/${id}/run`),
 }
 
 // ── Alerts ───────────────────────────────────────────────────────────────────
 
 export const alertsApi = {
   list: (monitorId?: number) =>
-    api.get<Alert[]>('/alerts', { params: monitorId ? { monitor_id: monitorId } : {} }),
+    api.get<Alert[]>('/api/alerts', { params: monitorId ? { monitor_id: monitorId } : {} }),
 
-  get: (id: number) => api.get<Alert>(`/alerts/${id}`),
+  get: (id: number) => api.get<Alert>(`/api/alerts/${id}`),
 
-  markRead: (id: number) => api.patch<Alert>(`/alerts/${id}`, { is_read: true }),
+  markRead: (id: number) => api.put<Alert>(`/api/alerts/${id}/read`),
 
-  delete: (id: number) => api.delete(`/alerts/${id}`),
+  delete: (id: number) => api.delete(`/api/alerts/${id}`),
 }
 
 // ── Billing ───────────────────────────────────────────────────────────────────
 
 export const billingApi = {
-  getPlans: () => api.get<Plan[]>('/billing/plans'),
+  getPlans: () => api.get<Plan[]>('/api/billing/plans'),
 
-  createCheckout: (priceId: string) =>
-    api.post<{ url: string }>('/billing/checkout', { price_id: priceId }),
+  createCheckout: (plan: string) =>
+    api.post<{ checkout_url: string }>('/api/billing/checkout', { plan }),
 
   createPortalSession: () =>
-    api.post<{ url: string }>('/billing/portal'),
+    api.post<{ portal_url: string }>('/api/billing/portal'),
 }

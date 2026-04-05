@@ -34,7 +34,12 @@ def _build_query(config: dict) -> str:
     location: str = config.get("location", "")
     max_price: float | None = config.get("max_price")
     min_bedrooms: int | None = config.get("min_bedrooms")
-    keywords: List[str] = config.get("keywords", [])
+    raw_keywords = config.get("keywords", [])
+    # Accept either a list or a comma-separated string
+    if isinstance(raw_keywords, str):
+        keywords: List[str] = [k.strip() for k in raw_keywords.split(",") if k.strip()]
+    else:
+        keywords = list(raw_keywords)
 
     parts = ["rental apartment"]
     if location:
