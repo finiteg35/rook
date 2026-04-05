@@ -39,8 +39,12 @@ def _is_due(monitor: Monitor, user: User) -> bool:
     if not monitor.last_checked:
         return True
     interval_minutes = _get_interval_minutes(monitor.module_type, user.plan)
-    due_at = monitor.last_checked + timedelta(minutes=interval_minutes)
-    return datetime.now(timezone.utc) >= due_at.replace(tzinfo=timezone.utc)
+    last = monitor.last_checked
+    # Ensure comparison is timezone-aware
+    if last.tzinfo is None:
+        last = last.replace(tzinfo=timezone.utc)
+    due_at = last + timedelta(minutes=interval_minutes)
+    return datetime.now(timezone.utc) >= due_at
 
 
 def _run_worker(module_type: str) -> None:

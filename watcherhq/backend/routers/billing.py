@@ -111,6 +111,7 @@ def create_checkout(
             customer=customer_id,
             mode="subscription",
             line_items=[{"price": price_id, "quantity": 1}],
+            # Double braces escape the f-string; Stripe substitutes {CHECKOUT_SESSION_ID} server-side
             success_url=f"{settings.APP_URL}/billing/success?session_id={{CHECKOUT_SESSION_ID}}",
             cancel_url=f"{settings.APP_URL}/billing/cancel",
         )

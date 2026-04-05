@@ -2,7 +2,6 @@ import json
 import logging
 from datetime import datetime, timezone
 from typing import List
-from urllib.parse import urlparse
 
 from sqlalchemy.orm import Session
 
