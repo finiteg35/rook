@@ -187,12 +187,34 @@ sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
 
 ## 🐳 Docker Deployment (Alternative)
 
+The `docker-compose.yml` uses pre-built public Docker Hub images and is compatible with Docker Manager tools (e.g. Portainer, Coolify) as well as direct VPS terminal usage.
+
+### 1. Open firewall ports
+
+The compose file exposes ports **80**, **443**, **3001**, and **8000**. Open them before starting the stack:
+
+```bash
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 3001/tcp
+sudo ufw allow 8000/tcp
+sudo ufw reload
+```
+
+### 2. Start the stack
+
 ```bash
 cd /opt/watcherhq/watcherhq
 cp .env.example .env
 nano .env  # Fill in all values
 
-docker compose up -d --build
+docker compose up -d
+```
+
+To pull the latest images and restart:
+
+```bash
+docker compose pull && docker compose up -d
 ```
 
 ---
