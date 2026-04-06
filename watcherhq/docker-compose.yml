@@ -12,7 +12,6 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
       - watcherhq_db:/app/data
     networks:
       - watcherhq_net
@@ -40,7 +39,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/watcherhq.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/watcherhq-docker.conf:/etc/nginx/conf.d/default.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - watcherhq_net
