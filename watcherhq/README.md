@@ -37,7 +37,9 @@ cd backend
 python -m venv venv
 source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
+# Run from the watcherhq/ root so package-relative imports resolve
+cd ..
+uvicorn backend.main:app --reload --port 8000
 ```
 
 The API will be available at http://localhost:8000  
@@ -101,9 +103,10 @@ After=network.target
 [Service]
 Type=simple
 User=www-data
-WorkingDirectory=/opt/watcherhq/watcherhq/backend
+# Run from the watcherhq/ project root so relative imports resolve correctly
+WorkingDirectory=/opt/watcherhq/watcherhq
 EnvironmentFile=/opt/watcherhq/watcherhq/.env
-ExecStart=/opt/watcherhq/watcherhq/backend/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000
+ExecStart=/opt/watcherhq/watcherhq/backend/venv/bin/uvicorn backend.main:app --host 0.0.0.0 --port 8000
 Restart=on-failure
 RestartSec=5
 
