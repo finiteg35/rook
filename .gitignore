@@ -29,6 +29,7 @@ out/
 .env.*.local
 !.env.example
 !.env.local.example
+!watcherhq/.env
 
 # OS
 .DS_Store
