@@ -2,9 +2,7 @@ version: "3.9"
 
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: finiteg35/watcherhq-backend:latest
     container_name: watcherhq_backend
     restart: unless-stopped
     env_file:
@@ -17,9 +15,7 @@ services:
       - watcherhq_net
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: finiteg35/watcherhq-frontend:latest
     container_name: watcherhq_frontend
     restart: unless-stopped
     env_file:

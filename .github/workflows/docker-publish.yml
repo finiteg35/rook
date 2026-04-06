@@ -1,0 +1,63 @@
+name: Build & Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "watcherhq/backend/**"
+      - "watcherhq/frontend/**"
+      - ".github/workflows/docker-publish.yml"
+
+jobs:
+  build-backend:
+    name: Backend image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: watcherhq/backend
+          file: watcherhq/backend/Dockerfile
+          push: true
+          tags: |
+            finiteg35/watcherhq-backend:latest
+            finiteg35/watcherhq-backend:${{ github.sha }}
+          provenance: true
+          sbom: true
+
+  build-frontend:
+    name: Frontend image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: watcherhq/frontend
+          file: watcherhq/frontend/Dockerfile
+          push: true
+          tags: |
+            finiteg35/watcherhq-frontend:latest
+            finiteg35/watcherhq-frontend:${{ github.sha }}
+          provenance: true
+          sbom: true
